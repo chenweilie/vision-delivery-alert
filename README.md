@@ -2,7 +2,7 @@
 
 **AI-powered computer vision pipeline that detects delivery events from camera feeds and triggers automated multi-channel alerts — with < 15 second end-to-end latency.**
 
-[![CI](https://github.com/your-username/vision-delivery-alert/actions/workflows/ci.yml/badge.svg)](https://github.com/your-username/vision-delivery-alert/actions)
+[![CI](https://github.com/chenweilie/vision-delivery-alert/actions/workflows/ci.yml/badge.svg)](https://github.com/chenweilie/vision-delivery-alert/actions)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![AWS](https://img.shields.io/badge/AWS-Rekognition-FF9900.svg?logo=amazon-aws)](https://aws.amazon.com/rekognition/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
@@ -113,7 +113,7 @@ Camera → Image Capture → Amazon Rekognition → Detection Logic → Notifica
 ### 1. Clone and configure
 
 ```bash
-git clone https://github.com/your-username/vision-delivery-alert.git
+git clone https://github.com/chenweilie/vision-delivery-alert.git
 cd vision-delivery-alert
 cp .env.example .env
 # Edit .env with your AWS credentials and notification settings
