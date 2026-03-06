@@ -1,0 +1,88 @@
+{
+  "session_info": {
+    "session_id": "demo-session-2024-01-15",
+    "started_at": "2024-01-15T14:20:00Z",
+    "camera_source": "rtsp://192.168.1.100:554/stream",
+    "aws_region": "us-east-1"
+  },
+  "events": [
+    {
+      "event_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "timestamp": "2024-01-15T14:30:01Z",
+      "frame_path": "frames/2024-01-15T14-30-01.jpg",
+      "labels": [
+        {"name": "Person", "confidence": 92.4, "parents": [], "instances": 1},
+        {"name": "Package", "confidence": 87.1, "parents": [], "instances": 1},
+        {"name": "Door", "confidence": 78.3, "parents": ["Architecture"], "instances": 0},
+        {"name": "House", "confidence": 71.0, "parents": [], "instances": 0},
+        {"name": "Outdoor", "confidence": 68.5, "parents": [], "instances": 0}
+      ],
+      "delivery_detected": true,
+      "alert_sent": true,
+      "alert_channels": ["email", "slack"],
+      "state_transition": "CANDIDATE → CONFIRMED → ALERTED",
+      "processing_time_ms": 2840,
+      "person_confidence": 92.4,
+      "package_confidence": 87.1
+    },
+    {
+      "event_id": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+      "timestamp": "2024-01-15T14:29:51Z",
+      "frame_path": "frames/2024-01-15T14-29-51.jpg",
+      "labels": [
+        {"name": "Person", "confidence": 89.3, "parents": [], "instances": 1},
+        {"name": "Package", "confidence": 72.4, "parents": [], "instances": 1},
+        {"name": "Door", "confidence": 68.1, "parents": ["Architecture"], "instances": 0}
+      ],
+      "delivery_detected": false,
+      "alert_sent": false,
+      "alert_channels": [],
+      "state_transition": "CANDIDATE",
+      "processing_time_ms": 2150,
+      "person_confidence": 89.3,
+      "package_confidence": 72.4
+    },
+    {
+      "event_id": "c3d4e5f6-a7b8-9012-cdef-012345678902",
+      "timestamp": "2024-01-15T14:29:41Z",
+      "frame_path": "frames/2024-01-15T14-29-41.jpg",
+      "labels": [
+        {"name": "Person", "confidence": 82.1, "parents": [], "instances": 1},
+        {"name": "Tree", "confidence": 91.2, "parents": ["Plant"], "instances": 0},
+        {"name": "Grass", "confidence": 88.5, "parents": ["Plant"], "instances": 0}
+      ],
+      "delivery_detected": false,
+      "alert_sent": false,
+      "alert_channels": [],
+      "state_transition": "IDLE → CANDIDATE",
+      "processing_time_ms": 1920,
+      "person_confidence": 82.1,
+      "package_confidence": 0.0
+    },
+    {
+      "event_id": "d4e5f6a7-b8c9-0123-def0-123456789003",
+      "timestamp": "2024-01-15T14:29:31Z",
+      "frame_path": "frames/2024-01-15T14-29-31.jpg",
+      "labels": [
+        {"name": "Car", "confidence": 95.3, "parents": ["Vehicle"], "instances": 1},
+        {"name": "Tree", "confidence": 88.1, "parents": ["Plant"], "instances": 0},
+        {"name": "Sky", "confidence": 82.4, "parents": [], "instances": 0}
+      ],
+      "delivery_detected": false,
+      "alert_sent": false,
+      "alert_channels": [],
+      "state_transition": "IDLE",
+      "processing_time_ms": 1680,
+      "person_confidence": 0.0,
+      "package_confidence": 0.0
+    }
+  ],
+  "session_stats": {
+    "total_scans": 4,
+    "deliveries_detected": 1,
+    "alerts_sent": 1,
+    "avg_processing_time_ms": 2147,
+    "false_positive_count": 0,
+    "session_duration_seconds": 30
+  }
+}

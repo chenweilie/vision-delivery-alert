@@ -1,0 +1,47 @@
+version: "3.9"
+
+services:
+  monitor:
+    build: .
+    image: delivery-monitor:latest
+    container_name: delivery-monitor
+    restart: unless-stopped
+    environment:
+      # AWS Credentials (or use IAM role)
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_REGION=${AWS_REGION:-us-east-1}
+      # Notifications
+      - SLACK_WEBHOOK_URL=${SLACK_WEBHOOK_URL}
+      - ALERT_RECIPIENTS=${ALERT_RECIPIENTS}
+      - SMTP_USER=${SMTP_USER}
+      - SMTP_PASSWORD=${SMTP_PASSWORD}
+      - WEBHOOK_URL=${WEBHOOK_URL}
+      # Camera (override)
+      - CAMERA_SOURCE=${CAMERA_SOURCE:-0}
+    volumes:
+      - ./logs:/app/logs
+      - ./frames:/app/frames
+      - ./config.yaml:/app/config.yaml:ro
+    devices:
+      # Uncomment to pass through USB webcam
+      # - /dev/video0:/dev/video0
+      []
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: [ "CMD", "python", "-c", "import src.config; print('OK')" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  dashboard:
+    image: nginx:alpine
+    container_name: delivery-dashboard
+    restart: unless-stopped
+    volumes:
+      - ./dashboard:/usr/share/nginx/html:ro
+    ports:
+      - "3000:80"
+    depends_on:
+      - monitor

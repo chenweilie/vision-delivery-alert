@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Delivery Monitor Dashboard | Amazon Rekognition</title>
+  <meta name="description" content="Real-time AI delivery event monitoring dashboard powered by Amazon Rekognition computer vision." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-brand">
+      <div class="logo-icon">📦</div>
+      <div>
+        <h1 class="header-title">Delivery Monitor</h1>
+        <p class="header-subtitle">Amazon Rekognition · Computer Vision Pipeline</p>
+      </div>
+    </div>
+    <div class="header-status">
+      <span class="status-dot" id="statusDot"></span>
+      <span class="status-label" id="statusLabel">Connecting...</span>
+      <span class="status-time" id="statusTime"></span>
+    </div>
+  </header>
+
+  <!-- Hero KPIs -->
+  <section class="kpi-grid" aria-label="Key metrics">
+    <div class="kpi-card" id="kpiScans">
+      <div class="kpi-icon">🔍</div>
+      <div class="kpi-value" id="kpiScansValue">—</div>
+      <div class="kpi-label">Total Scans</div>
+      <div class="kpi-sub" id="kpiScansSub">Awaiting data...</div>
+    </div>
+    <div class="kpi-card kpi-accent" id="kpiDeliveries">
+      <div class="kpi-icon">🚚</div>
+      <div class="kpi-value" id="kpiDeliveriesValue">—</div>
+      <div class="kpi-label">Deliveries Detected</div>
+      <div class="kpi-sub" id="kpiDeliveriesSub">Session total</div>
+    </div>
+    <div class="kpi-card" id="kpiAlerts">
+      <div class="kpi-icon">🔔</div>
+      <div class="kpi-value" id="kpiAlertsValue">—</div>
+      <div class="kpi-label">Alerts Sent</div>
+      <div class="kpi-sub" id="kpiAlertsSub">Email + Slack</div>
+    </div>
+    <div class="kpi-card" id="kpiLatency">
+      <div class="kpi-icon">⚡</div>
+      <div class="kpi-value" id="kpiLatencyValue">—</div>
+      <div class="kpi-label">Avg Latency</div>
+      <div class="kpi-sub">Target: &lt; 15s</div>
+    </div>
+  </section>
+
+  <!-- Main content -->
+  <main class="main-grid">
+    <!-- Left: Live Detection Panel -->
+    <section class="panel panel-live">
+      <div class="panel-header">
+        <h2 class="panel-title">
+          <span class="panel-icon">👁</span>
+          Live Detection
+        </h2>
+        <div class="state-badge" id="stateBadge">IDLE</div>
+      </div>
+
+      <div class="live-frame-container">
+        <div class="live-frame-placeholder" id="liveFrame">
+          <div class="placeholder-icon">📷</div>
+          <div class="placeholder-text">Awaiting camera frame...</div>
+          <div class="scan-line"></div>
+        </div>
+        <div class="frame-meta" id="frameMeta"></div>
+      </div>
+
+      <!-- Detection bars -->
+      <div class="detection-bars">
+        <div class="detection-bar-row">
+          <span class="bar-label">Person</span>
+          <div class="bar-track">
+            <div class="bar-fill bar-person" id="barPerson" style="width:0%"></div>
+          </div>
+          <span class="bar-value" id="barPersonVal">0%</span>
+        </div>
+        <div class="detection-bar-row">
+          <span class="bar-label">Package</span>
+          <div class="bar-track">
+            <div class="bar-fill bar-package" id="barPackage" style="width:0%"></div>
+          </div>
+          <span class="bar-value" id="barPackageVal">0%</span>
+        </div>
+      </div>
+
+      <!-- Top labels -->
+      <div class="labels-section">
+        <div class="labels-title">Rekognition Labels</div>
+        <div class="labels-container" id="labelsContainer">
+          <span class="label-placeholder">No scan yet</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Right: Event Feed + Chart -->
+    <section class="panel panel-events">
+      <div class="panel-header">
+        <h2 class="panel-title">
+          <span class="panel-icon">⚡</span>
+          Event Feed
+        </h2>
+        <span class="events-count" id="eventsCount">0 events</span>
+      </div>
+      <div class="event-feed" id="eventFeed">
+        <div class="event-empty">
+          <div class="event-empty-icon">📋</div>
+          <div>Monitoring active. Events will appear here.</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Pipeline Visualization -->
+  <section class="pipeline-section">
+    <h2 class="section-title">Detection Pipeline</h2>
+    <div class="pipeline">
+      <div class="pipeline-step" id="pipeCapture">
+        <div class="pipeline-icon">📷</div>
+        <div class="pipeline-label">Capture</div>
+      </div>
+      <div class="pipeline-arrow">→</div>
+      <div class="pipeline-step" id="pipeRek">
+        <div class="pipeline-icon">🧠</div>
+        <div class="pipeline-label">Rekognition</div>
+      </div>
+      <div class="pipeline-arrow">→</div>
+      <div class="pipeline-step" id="pipeDetect">
+        <div class="pipeline-icon">🔍</div>
+        <div class="pipeline-label">Detection</div>
+      </div>
+      <div class="pipeline-arrow">→</div>
+      <div class="pipeline-step" id="pipeTrigger">
+        <div class="pipeline-icon">⚡</div>
+        <div class="pipeline-label">Trigger</div>
+      </div>
+      <div class="pipeline-arrow">→</div>
+      <div class="pipeline-step" id="pipeNotify">
+        <div class="pipeline-icon">🔔</div>
+        <div class="pipeline-label">Notify</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>Amazon Rekognition Delivery Monitor · Applied AI Engineering Showcase · 
+       <a href="https://github.com/your-username/vision-delivery-alert" class="footer-link" target="_blank">GitHub</a>
+    </p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

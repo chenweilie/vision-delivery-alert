@@ -1,0 +1,66 @@
+# Camera configuration
+camera:
+  source: "0"                    # "0" = webcam | "rtsp://..." = IP camera | "/path/to/image.jpg" = static
+  capture_interval: 5            # seconds between frames (5–10 recommended)
+  resolution_width: 1280
+  resolution_height: 720
+  reconnect_attempts: 5
+  reconnect_delay: 3
+
+# Amazon Rekognition settings
+rekognition:
+  region: us-east-1
+  max_labels: 20
+  min_confidence: 70.0           # Global minimum confidence threshold
+  person_confidence: 80.0        # Min confidence to count as "Person present"
+  package_confidence: 70.0       # Min confidence to count as "Package present"
+  package_labels:
+    - Package
+    - Box
+    - Cardboard
+    - Luggage
+    - Bag
+    - Crate
+    - Parcel
+  location_labels:
+    - Door
+    - Porch
+    - Entrance
+    - House
+    - Building
+
+# Detection state machine settings
+detection:
+  confirmation_frames: 2         # Consecutive positive frames required to confirm event
+  cooldown_minutes: 30           # Minimum gap between alerts for same zone
+  state_timeout_seconds: 60      # Reset CANDIDATE state after this many seconds with no match
+
+# Notification channels
+notification:
+  email:
+    enabled: false
+    smtp_host: smtp.gmail.com
+    smtp_port: 587
+    # smtp_user and smtp_password: set via .env or environment variables
+    recipients:
+      - your@email.com
+
+  slack:
+    enabled: false
+    # slack_webhook_url: set via SLACK_WEBHOOK_URL environment variable
+    channel: "#deliveries"
+
+  webhook:
+    enabled: false
+    # webhook_url: set via WEBHOOK_URL environment variable
+
+# Logging and storage
+logging:
+  level: INFO                    # DEBUG | INFO | WARNING | ERROR
+  log_dir: logs
+  frame_dir: frames
+  db_path: events.db
+  save_frames: true              # Save captured frames to disk
+
+# Web dashboard port
+dashboard_port: 8080

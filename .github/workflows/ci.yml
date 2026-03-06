@@ -1,0 +1,76 @@
+name: CI — Delivery Monitor
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Lint with ruff
+        run: ruff check src/ tests/
+
+      - name: Format check with black
+        run: black --check src/ tests/
+
+      - name: Run tests with coverage
+        run: |
+          pytest tests/ \
+            --cov=src \
+            --cov-report=xml \
+            --cov-report=term-missing \
+            -v
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        if: matrix.python-version == '3.11'
+        with:
+          file: ./coverage.xml
+          fail_ci_if_error: false
+
+  docker:
+    name: Docker Build
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t delivery-monitor:test .
+
+      - name: Verify image starts
+        run: |
+          docker run --rm --env AWS_ACCESS_KEY_ID=test \
+            --env AWS_SECRET_ACCESS_KEY=test \
+            --env AWS_REGION=us-east-1 \
+            delivery-monitor:test python -c "
+          import sys
+          sys.path.insert(0, 'src')
+          from config import load_config
+          from detection_logic import DeliveryDetector
+          config = load_config()
+          detector = DeliveryDetector(config)
+          print('Container boot OK — detector state:', detector.state.name)
+          "
